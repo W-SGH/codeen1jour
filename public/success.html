@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ton Code en Un Jour</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://js.stripe.com/v3"></script>
+  </head>
+  <body class="bg-white text-gray-800">
+    <!-- Hero Section -->
+    <header
+      class="relative w-full h-screen flex flex-col justify-center items-center px-8 bg-cover bg-center text-white text-center"
+      style="background-image: url('image1.png')"
+    >
+      <div
+        class="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm"
+      ></div>
+      <div
+        class="relative z-10 bg-black bg-opacity-70 p-8 rounded-xl max-w-2xl w-full"
+        data-aos="fade-down"
+      >
+        <h1>Paiement réussi !</h1>
+        <p>Merci pour ton inscription 🎉</p>
+      </div>
+    </header>
+
+    <!-- Footer -->
+    <footer
+      class="text-center text-sm py-8 text-gray-500 bg-white border-t"
+      data-aos="fade-up"
+    >
+      &copy; 2025 Ton Code en Un Jour. Tous droits réservés.<br />
+      <a href="mentions-legales.html" class="underline hover:text-yellow-500"
+        >Mentions légales</a
+      >
+      |
+      <a
+        href="politique-confidentialite.html"
+        class="underline hover:text-yellow-500"
+        >Politique de confidentialité</a
+      >
+      |
+      <a
+        href="conditions-generales-vente.html"
+        class="underline hover:text-yellow-500"
+        >Conditions générales de vente</a
+      >
+      |
+      <a
+        href="https://www.tiktok.com/@permisougalere"
+        target="_blank"
+        class="underline hover:text-yellow-500"
+        >TikTok @permisougalere</a
+      >
+      |
+      <a
+        href="https://www.bhspermis.fr"
+        target="_blank"
+        class="underline hover:text-yellow-500"
+        >Site de BHS Permis</a
+      >
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        once: true,
+        duration: 800,
+      });
+    </script>
+
+    <script>
+      const stripe = Stripe(
+        "pk_test_51RA2y3BTZAfPcI0PbYHLsdeGs0xO8r4iPHvRfiNVZhRJlfMd4s3ytg0CKD0hBiRDX4JIp1sguObt3vN0oG1seCpJ00b18500KM"
+      );
+      const form = document.getElementById("payment-form");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+          const response = await fetch("/create-checkout-session", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (!response.ok) {
+            throw new Error(
+              "Erreur lors de la création de la session de paiement"
+            );
+          }
+
+          const session = await response.json();
+          stripe.redirectToCheckout({ sessionId: session.id });
+        } catch (error) {
+          console.error("Erreur:", error);
+          alert(
+            "Une erreur est survenue lors du traitement du paiement. Veuillez réessayer."
+          );
+        }
+      });
+    </script>
+  </body>
+</html>

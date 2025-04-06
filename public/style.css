@@ -1,0 +1,74 @@
+body {
+  font-family: "Inter", sans-serif;
+}
+
+/* Hero Section Styles */
+header {
+  background-size: cover;
+  background-position: center;
+}
+
+/* Custom Animation Tweaks */
+[data-aos] {
+  pointer-events: none;
+}
+
+[data-aos].aos-animate {
+  pointer-events: auto;
+}
+
+/* Button Hover Effects */
+.hover\:bg-yellow-300:hover {
+  background-color: rgba(252, 211, 77);
+  transition: all 0.3s ease;
+}
+
+/* Links Hover Effects */
+.hover\:text-yellow-500:hover {
+  color: rgba(245, 158, 11);
+  transition: all 0.3s ease;
+}
+
+/* Form Input Focus Styles */
+input:focus {
+  outline: none;
+  border-color: rgba(245, 158, 11);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+/* Custom Spacing for Mobile */
+@media (max-width: 640px) {
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .py-16 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .py-20 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
+/* Additional Styling for Footer Links */
+footer a {
+  text-decoration: underline;
+  margin: 0 0.25rem;
+}
+
+/* Section Background Enhancements */
+.bg-yellow-50 {
+  background-color: rgba(254, 252, 232, 0.7);
+}
+
+.bg-yellow-100 {
+  background-color: rgba(254, 243, 199, 0.8);
+}
+
+/* Shadow Enhancement */
+.shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}

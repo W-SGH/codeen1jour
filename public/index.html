@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ton Code en Un Jour</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://js.stripe.com/v3"></script>
+  </head>
+  <body class="bg-white text-gray-800">
+    <!-- Hero Section -->
+    <header
+      class="relative w-full h-screen flex flex-col justify-center items-center px-8 bg-cover bg-center text-white text-center"
+      style="background-image: url('image1.png')"
+    >
+      <div
+        class="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm"
+      ></div>
+      <div
+        class="relative z-10 bg-black bg-opacity-70 p-8 rounded-xl max-w-2xl w-full"
+        data-aos="fade-down"
+      >
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
+          Ton Code en Un Jour<br />Avec Moi – En Visio 🚀
+        </h1>
+        <p class="mt-4 text-lg">
+          Prépare-toi à réussir le Code de la route en une seule journée
+          intensive, depuis chez toi !
+        </p>
+        <a
+          href="#inscription"
+          class="mt-6 inline-block bg-yellow-400 text-gray-900 font-semibold px-6 py-3 rounded-xl shadow hover:bg-yellow-300 transition"
+          >Je m'inscris</a
+        >
+      </div>
+    </header>
+
+    <!-- Pourquoi nous choisir -->
+    <section class="bg-white py-16 px-6" data-aos="fade-up">
+      <div class="max-w-5xl mx-auto rounded-2xl shadow-lg p-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-center mb-10">
+          Pourquoi nous choisir
+        </h2>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center"
+        >
+          <div>
+            <div class="text-4xl mb-2">⏱️</div>
+            <h3 class="font-bold text-lg mb-1">Rapide et efficace</h3>
+            <p class="text-sm text-gray-600">
+              Formez-vous en une seule journée de manière intensive
+            </p>
+          </div>
+          <div>
+            <div class="text-4xl mb-2">✅</div>
+            <h3 class="font-bold text-lg mb-1">Cours complets</h3>
+            <p class="text-sm text-gray-600">
+              10 thèmes essentiels du code de la route couverts
+            </p>
+          </div>
+          <div>
+            <div class="text-4xl mb-2">💬</div>
+            <h3 class="font-bold text-lg mb-1">Questions en direct</h3>
+            <p class="text-sm text-gray-600">
+              Séances interactives pour répondre à toutes vos questions
+            </p>
+          </div>
+          <div>
+            <div class="text-4xl mb-2">📄</div>
+            <h3 class="font-bold text-lg mb-1">Examens inclus</h3>
+            <p class="text-sm text-gray-600">
+              Accès aux examens blancs pour bien s'entraîner
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- À propos de la formation -->
+    <section class="py-16 px-6 bg-yellow-50" data-aos="fade-up">
+      <div class="max-w-5xl mx-auto">
+        <h2 class="text-2xl md:text-3xl font-bold text-center mb-10">
+          À propos de la formation
+        </h2>
+        <div class="grid md:grid-cols-2 gap-6 text-gray-700">
+          <div>
+            <ul class="space-y-2">
+              <li>✅ <strong>Prochaine session :</strong> Dimanche 20 avril</li>
+              <li>✅ <strong>Horaires :</strong> 9h – 18h (1h de pause)</li>
+              <li>
+                ✅ <strong>100% en visio :</strong> Apprenez depuis chez vous
+              </li>
+              <li>✅ <strong>Tarif :</strong> 30 €</li>
+            </ul>
+          </div>
+          <div>
+            <ul class="space-y-2">
+              <li>
+                ✅ <strong>PDF fourni :</strong> 100 questions-réponses du
+                permis
+              </li>
+              <li>✅ <strong>Examens blancs :</strong> via Prépacode</li>
+              <li>
+                ✅ <strong>Révisions faciles :</strong> contenu pédagogique
+                fourni
+              </li>
+              <li>
+                ✅ <strong>Pas de numéro NEPH ?</strong> On s'en occupe
+                gratuitement !
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formulaire d'inscription -->
+    <section
+      id="inscription"
+      class="py-20 bg-yellow-100 px-4"
+      data-aos="zoom-in"
+    >
+      <div class="max-w-3xl mx-auto bg-white shadow-2xl rounded-2xl p-10">
+        <h2 class="text-3xl font-bold text-center text-yellow-600 mb-6">
+          Inscription à la formation
+        </h2>
+        <p class="text-center text-gray-600 mb-6">
+          Tu veux maximiser tes chances de réussir le Code ? Réserve ta place
+          dès maintenant !
+        </p>
+        <form id="payment-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <input
+            type="text"
+            name="prenom"
+            placeholder="Prénom"
+            required
+            class="p-3 border border-gray-300 rounded-xl w-full"
+          />
+          <input
+            type="text"
+            name="nom"
+            placeholder="Nom"
+            required
+            class="p-3 border border-gray-300 rounded-xl w-full"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            required
+            class="p-3 border border-gray-300 rounded-xl w-full"
+          />
+          <input
+            type="tel"
+            name="tel"
+            placeholder="Téléphone"
+            required
+            class="p-3 border border-gray-300 rounded-xl w-full"
+          />
+          <div class="md:col-span-2 text-center">
+            <button
+              type="submit"
+              class="mt-4 bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-semibold px-8 py-3 rounded-xl transition"
+            >
+              💳 Payer 30 €
+            </button>
+          </div>
+        </form>
+        <div class="mt-6 text-center text-sm text-gray-600">
+          Retrouve-nous aussi sur :
+          <a
+            href="https://www.tiktok.com/@permisougalere"
+            target="_blank"
+            class="underline hover:text-yellow-500 ml-1"
+            >TikTok @permisougalere</a
+          >
+          |
+          <a
+            href="https://www.bhspermis.fr"
+            target="_blank"
+            class="underline hover:text-yellow-500 ml-1"
+            >Site de BHS Permis</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+      class="text-center text-sm py-8 text-gray-500 bg-white border-t"
+      data-aos="fade-up"
+    >
+      &copy; 2025 Ton Code en Un Jour. Tous droits réservés.<br />
+      <a href="mentions-legales.html" class="underline hover:text-yellow-500"
+        >Mentions légales</a
+      >
+      |
+      <a
+        href="politique-confidentialite.html"
+        class="underline hover:text-yellow-500"
+        >Politique de confidentialité</a
+      >
+      |
+      <a
+        href="conditions-generales-vente.html"
+        class="underline hover:text-yellow-500"
+        >Conditions générales de vente</a
+      >
+      |
+      <a
+        href="https://www.tiktok.com/@permisougalere"
+        target="_blank"
+        class="underline hover:text-yellow-500"
+        >TikTok @permisougalere</a
+      >
+      |
+      <a
+        href="https://www.bhspermis.fr"
+        target="_blank"
+        class="underline hover:text-yellow-500"
+        >Site de BHS Permis</a
+      >
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        once: true,
+        duration: 800,
+      });
+    </script>
+
+    <script>
+      const stripe = Stripe(
+        "pk_test_51RA2y3BTZAfPcI0PbYHLsdeGs0xO8r4iPHvRfiNVZhRJlfMd4s3ytg0CKD0hBiRDX4JIp1sguObt3vN0oG1seCpJ00b18500KM"
+      );
+      const form = document.getElementById("payment-form");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+          const response = await fetch("/create-checkout-session", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (!response.ok) {
+            throw new Error(
+              "Erreur lors de la création de la session de paiement"
+            );
+          }
+
+          const session = await response.json();
+          stripe.redirectToCheckout({ sessionId: session.id });
+        } catch (error) {
+          console.error("Erreur:", error);
+          alert(
+            "Une erreur est survenue lors du traitement du paiement. Veuillez réessayer."
+          );
+        }
+      });
+    </script>
+  </body>
+</html>
