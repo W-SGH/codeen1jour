@@ -92,8 +92,8 @@ app.post("/create-checkout-session", async (req, res) => {
           quantity: 1,
         },
       ],
-      success_url: "http://localhost:3000/success.html",
-      cancel_url: "http://localhost:3000/cancel.html",
+      success_url: `${process.env.BASE_URL}/success.html`,
+      cancel_url: `${process.env.BASE_URL}/cancel.html`,
       metadata: { email, nom, prenom },
     });
 
@@ -104,6 +104,6 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
-app.listen(3000, () =>
-  console.log("✅ Serveur lancé sur http://localhost:3000")
-);
+// Écoute sur le port fourni par Render
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`✅ Serveur lancé sur le port ${port}`));
