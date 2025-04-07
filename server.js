@@ -29,6 +29,8 @@ app.post(
       console.error("❌ Erreur vérification webhook:", err.message);
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
+    console.log("✅ Webhook reçu :", event.type);
+    console.log("🎯 Contenu de l'événement :", JSON.stringify(event, null, 2));
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
