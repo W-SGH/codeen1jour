@@ -8,6 +8,9 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
+// 🔍 Désactiver la vérification TLS (utile en test Render)
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 // Webhook Stripe doit être placé AVANT express.json()
 app.post(
   "/webhook",
@@ -34,47 +37,59 @@ app.post(
       const nom = session.metadata.nom || "";
       const date = new Date().toISOString();
 
-      const ligne = `"${prenom}","${nom}","${email}","${date}"
-`;
+      const ligne = `"${prenom}","${nom}","${email}","${date}"\n`;
       fs.appendFile("inscriptions.csv", ligne, (err) => {
         if (err) console.error("Erreur CSV:", err);
         else console.log("✅ Inscription enregistrée dans CSV.");
       });
 
+      // 📤 Transporteur Nodemailer avec debug activé
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
         },
+        logger: true, // log SMTP
+        debug: true, // verbose
       });
 
       // Email élève
-      transporter.sendMail({
-        from: `"BHS Permis" <${process.env.SMTP_USER}>`,
-        to: email,
-        subject: "Confirmation d'inscription",
-        html: `<p>Bonjour ${prenom} ${nom},</p><p>Merci pour ton inscription à la formation Code en 1 jour.</p>`,
-      });
+      transporter.sendMail(
+        {
+          from: `"BHS Permis" <${process.env.SMTP_USER}>`,
+          to: email,
+          subject: "Confirmation d'inscription",
+          html: `<p>Bonjour ${prenom} ${nom},</p><p>Merci pour ton inscription à la formation Code en 1 jour.</p>`,
+        },
+        (err, info) => {
+          if (err) console.error("❌ Erreur envoi mail élève:", err);
+          else console.log("📩 Mail élève envoyé :", info.response);
+        }
+      );
 
       // Email admin
-      transporter.sendMail({
-        from: `"BHS Permis" <${process.env.SMTP_USER}>`,
-        to: process.env.SMTP_USER,
-        subject: "Nouvelle inscription",
-        html: `<p>Nouvelle inscription :</p><ul><li>Prénom : ${prenom}</li><li>Nom : ${nom}</li><li>Email : ${email}</li></ul>`,
-      });
+      transporter.sendMail(
+        {
+          from: `"BHS Permis" <${process.env.SMTP_USER}>`,
+          to: process.env.SMTP_USER,
+          subject: "Nouvelle inscription",
+          html: `<p>Nouvelle inscription :</p><ul><li>Prénom : ${prenom}</li><li>Nom : ${nom}</li><li>Email : ${email}</li></ul>`,
+        },
+        (err, info) => {
+          if (err) console.error("❌ Erreur envoi mail admin:", err);
+          else console.log("📩 Mail admin envoyé :", info.response);
+        }
+      );
     }
 
     res.status(200).send("OK");
   }
 );
 
-// Express parsers doivent venir APRÈS le webhook
 app.use(express.json());
 app.use(express.static("public"));
 
-// Route Stripe Checkout
 app.post("/create-checkout-session", async (req, res) => {
   try {
     const { email, nom, prenom } = req.body;
@@ -104,6 +119,5 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
-// Écoute sur le port fourni par Render
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`✅ Serveur lancé sur le port ${port}`));
