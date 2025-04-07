@@ -7,11 +7,8 @@ const path = require("path");
 const bodyParser = require("body-parser");
 
 const app = express();
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // pour test sur Render
 
-// 🔍 Désactiver la vérification TLS (utile en test Render)
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
-// Webhook Stripe doit être placé AVANT express.json()
 app.post(
   "/webhook",
   bodyParser.raw({ type: "application/json" }),
@@ -29,8 +26,8 @@ app.post(
       console.error("❌ Erreur vérification webhook:", err.message);
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
+
     console.log("✅ Webhook reçu :", event.type);
-    console.log("🎯 Contenu de l'événement :", JSON.stringify(event, null, 2));
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
@@ -39,30 +36,45 @@ app.post(
       const nom = session.metadata.nom || "";
       const date = new Date().toISOString();
 
-      const ligne = `"${prenom}","${nom}","${email}","${date}"\n`;
+      const visioURL = `https://meet.jit.si/codeen1jour-${Date.now()}`;
+      const ligne = `"${prenom}","${nom}","${email}","${date}","${visioURL}"\n`;
+
       fs.appendFile("inscriptions.csv", ligne, (err) => {
         if (err) console.error("Erreur CSV:", err);
         else console.log("✅ Inscription enregistrée dans CSV.");
       });
 
-      // 📤 Transporteur Nodemailer avec debug activé
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
         },
-        logger: true, // log SMTP
-        debug: true, // verbose
+        logger: true,
+        debug: true,
       });
 
-      // Email élève
+      // Mail à l'élève
+      const messageEleve = `
+Bonjour ${prenom},
+
+Merci pour ton inscription à la formation *Code en 1 jour* !
+
+📅 Voici ton lien unique pour rejoindre la classe en visio :
+👉 ${visioURL}
+
+Pense à te connecter 5 minutes avant le début du cours.
+
+À très bientôt !
+L'équipe BHS Permis
+`;
+
       transporter.sendMail(
         {
           from: `"BHS Permis" <${process.env.SMTP_USER}>`,
           to: email,
-          subject: "Confirmation d'inscription",
-          html: `<p>Bonjour ${prenom} ${nom},</p><p>Merci pour ton inscription à la formation Code en 1 jour.</p>`,
+          subject: "Ton lien visio - Formation Code en 1 jour",
+          text: messageEleve,
         },
         (err, info) => {
           if (err) console.error("❌ Erreur envoi mail élève:", err);
@@ -70,13 +82,13 @@ app.post(
         }
       );
 
-      // Email admin
+      // Mail admin
       transporter.sendMail(
         {
           from: `"BHS Permis" <${process.env.SMTP_USER}>`,
           to: process.env.SMTP_USER,
           subject: "Nouvelle inscription",
-          html: `<p>Nouvelle inscription :</p><ul><li>Prénom : ${prenom}</li><li>Nom : ${nom}</li><li>Email : ${email}</li></ul>`,
+          html: `<p>Nouvelle inscription :</p><ul><li>Prénom : ${prenom}</li><li>Nom : ${nom}</li><li>Email : ${email}</li><li>Lien visio : <a href="${visioURL}">${visioURL}</a></li></ul>`,
         },
         (err, info) => {
           if (err) console.error("❌ Erreur envoi mail admin:", err);
